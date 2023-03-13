@@ -14,7 +14,7 @@ class MyPlugin extends Plugin {
     super.init(options);
     console.log(this)
     // Lógica específica del plugin que utiliza el objeto API
-    console.log(this.api.data);
+    console.log({'this.api.data': this.api.data});
     this.plugins.MyPluginDependency.methodFromOtherPlugin();
   }
 

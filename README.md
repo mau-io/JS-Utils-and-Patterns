@@ -8,7 +8,7 @@ The utilities in this repository cover a wide range of areas, including:
 - DOM manipulation
 - Event handling
 - Validation
-And more...
+- And more...
 
 # Design Patterns
 The design patterns included in this repository follow industry-standard approaches to solving common programming problems. These patterns can help developers create more robust and scalable applications. The design patterns included are:
@@ -17,7 +17,7 @@ The design patterns included in this repository follow industry-standard approac
 - State
 - Observer
 - Decorator
-And more...
+- And more...
 
 # Installation
 To use the utilities and design patterns in this repository, simply clone or download the repository and include the necessary files in your project.

@@ -48,11 +48,7 @@ class PluginManager {
       console.error(`${ANSI.red} Error loading plugin from ${url}: ${error.message} ${ANSI.reset}`);
     }
   }
-
-  getDependency(dependencyName) {
-    return this.dependencies[dependencyName];
-  }
-
+  
    // Listen to pluginInitialized event
   onPluginInitialized(handler) {
     this.on('pluginInitialized', handler);
@@ -61,11 +57,6 @@ class PluginManager {
   registerPlugin(plugin) {
     if (!(plugin instanceof Plugin)) {
       throw new Error("Plugin must be an instance of the Plugin class");
-    }
-
-    // Registrar las dependencias del plugin
-    if (plugin.dependencies && plugin.dependencies.length > 0) {
-      this.dependencies[plugin.name] = plugin.dependencies;
     }
 
     if (this.plugins[plugin.name]) {
