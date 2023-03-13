@@ -1,72 +1,56 @@
+const PluginManager = require('./PluginManager.js');
 
-const ANSI = {
-  reset: '\033[0m',
-  // Text color
-  red: '\033[31m',
-  green: '\033[32m',
-  blue: '\033[34m',
-}
+const fakeAPI = {
+  data: [
+    { id: 1, name: "John", age: 25 },
+    { id: 2, name: "Jane", age: 30 },
+    { id: 3, name: "Bob", age: 40 },
+  ],
 
-const Plugin = require('./Plugin.js');
-class PluginManager {
-  constructor() {
-    this.plugins = {};
-  }
+  getAllData: function() {
+    return this.data;
+  },
 
-  async loadPlugin(url) {
-    try {
-      const plugin = await import(url);
-      if (plugin && plugin.default && plugin.default.prototype instanceof Plugin) {
-        const instance = new plugin.default();
+  getDataById: function(id) {
+    return this.data.find(item => item.id === id);
+  },
 
-        this.plugins[instance.name] = instance;
+  addData: function(newData) {
+    this.data.push(newData);
+    return newData;
+  },
 
-        console.log(`${ANSI.green} * Plugin ${instance.name} cargado correctamente ${ANSI.reset}`);
-      } else {
-        console.log(`${ANSI.red} Error loading plugin from ${url}: the module does not contain a valid plugin class ${ANSI.reset}`);
-      }
-    } catch (error) {
-      console.error(`${ANSI.red} Error loading plugin from ${url}: ${error.message} ${ANSI.reset}`);
+  updateData: function(id, updatedData) {
+    const index = this.data.findIndex(item => item.id === id);
+    if (index !== -1) {
+      this.data[index] = { ...this.data[index], ...updatedData };
+      return this.data[index];
+    } else {
+      return null;
+    }
+  },
+
+  deleteData: function(id) {
+    const index = this.data.findIndex(item => item.id === id);
+    if (index !== -1) {
+      const deletedItem = this.data.splice(index, 1);
+      return deletedItem[0];
+    } else {
+      return null;
     }
   }
-
-  registerPlugin(plugin) {
-    this.plugins[plugin.name] = plugin;
-  }
-
-  unregisterPlugin(plugin) {
-    delete this.plugins[plugin.name];
-  }
-
-  getPlugin(name) {
-    return this.plugins[name];
-  }
-
-  getPlugins() {
-    return Object.values(this.plugins);
-  }
-
-  async initPlugins() {
-    const plugins = this.getPlugins();
-    for (const plugin of plugins) {
-      try {
-        await plugin.init();
-      } catch (error) {
-        console.error(`${ANSI.red} Error initializing plugin ${plugin.name}: ${error.message} ${ANSI.reset}`);
-      }
-    }
-  }
-}
+};
 
 (async() => {
   // Ejemplo de uso
-  const pluginManager = new PluginManager();
+  const pluginManager = new PluginManager(fakeAPI);
 
   // Cargar un plugin desde una URL
-  await pluginManager.loadPlugin("./plugins/MyPlugin.js");
-
+  await pluginManager.loadPlugin("./plugins/my-plugin.js");
+  await pluginManager.loadPlugin("./plugins/dependency-plugin.js");
+  await pluginManager.loadPlugin("./plugins/dependency-plugin.js");
    // Cargar un plugin desde una URL
-   await pluginManager.loadPlugin("./plugins/NotFound.js");
+  await pluginManager.loadPlugin("./plugins/NotFound.js");
 
   // Registrar un plugin manualmente
   //pluginManager.registerPlugin(new Plugin("myPlugin"));
@@ -74,11 +58,27 @@ class PluginManager {
   // Obtener un plugin por nombre
   const myPlugin = pluginManager.getPlugin("myPlugin");
 
-  // Obtener todos los plugins registrados
-  const allPlugins = pluginManager.getPlugins();
 
+  myPlugin.on("someEvent", data => {
+    console.log(`Plugin ${myPlugin.name} received event 'someEvent' with data:`, data);
+  });
+  myPlugin.emit("dataReceived", { data: 100 });
+
+    for (let i = 1; i <= 10; i++) {
+      myPlugin.addData(i)
+    }
+  
+  // Obtener todos los plugins registrados
+  //const allPlugins = pluginManager.getPlugins();
   // Inicializar el plugin
   //myPlugin.init();
-
-  pluginManager.initPlugins()
+  //pluginManager.initPlugins();
+  myPlugin.init({
+    loginURL: '/dsfdsfdsfsdf',
+    onLoginSuccess: () => console.log('Custom login success handler')
+  });
+ 
+  
 })();
+
+
