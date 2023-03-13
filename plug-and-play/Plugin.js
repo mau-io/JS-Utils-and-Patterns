@@ -1,6 +1,16 @@
 class Plugin {
-  constructor(name) {
+  constructor(name, version = "1.0.0", options = {}) {
+    if (!name || typeof name !== "string") {
+      throw new Error("Plugin name must be a non-empty string");
+    }
+  
+    if (typeof options !== 'object') {
+      throw new Error('Plugin options must be an object');
+    }
+  
     this.name = name;
+    this.version = version;
+    this.options = options;
   }
 
   init(options) {
