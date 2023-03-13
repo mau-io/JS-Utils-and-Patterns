@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": [
+      // other libs...
+      "ES6",
+      "DOM"
+    ],
+    // other settings...
+  },
+}
